@@ -1,0 +1,32 @@
+version: '3.5'
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    container_name: "mysql"
+    volumes:
+      - "./db:/var/lib/mysql"
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=Tar@1212
+      - MYSQL_DATABASE=sms
+      - MYSQL_USER=sms_app
+      - MYSQL_PASSWORD=Pat@1212
+  web:
+    build: .
+    links:
+      - mysql
+    container_name: SMS-Service
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_PORT=3306
+      - DB_NAME=sms
+      - DB_HOST=mysql
+      - MYSQL_USER=sms_app
+      - MYSQL_USER_PASSWORD=Pat@1212
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - mysql
